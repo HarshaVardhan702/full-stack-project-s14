@@ -185,26 +185,29 @@
     - Result: ✅ Compilation SUCCESS | ✅ Tests: 15/15 passed
     - Notes: Baseline pass rate is 100%
   - **Deferred Work**: None
-  - **Commit**: Pending
+  - **Commit**: cab35c2 - Step 2: Setup Baseline - Compile: SUCCESS, Tests: 15/15 passed
 
 ---
 
 - **Step 3: Upgrade Runtime and Build Configuration**
-  - **Status**: 🔘 Not Started
+  - **Status**: ✅ Completed
   - **Changes Made**:
-    - None
+    - Updated Java runtime target from 17 to 25
+    - Upgraded Spring Boot parent from 3.2.3 to 3.5.0
+    - Added compiler and surefire plugin version pins
+    - Added Lombok version and explicit annotation processor path
   - **Review Code Changes**:
-    - Sufficiency: Pending
-    - Necessity: Pending
-      - Functional Behavior: Pending
-      - Security Controls: Pending
+    - Sufficiency: ✅ All required changes present
+    - Necessity: ✅ All changes necessary
+      - Functional Behavior: ✅ Preserved - runtime/build configuration only
+      - Security Controls: ✅ Preserved - no auth/authorization logic changed
   - **Verification**:
-    - Command: Pending
-    - JDK: Pending
-    - Build tool: Pending
-    - Result: Pending
-    - Notes: Pending
-  - **Deferred Work**: Pending
+    - Command: `mvn -q clean test-compile`
+    - JDK: C:\Users\sayya\.jdk\jdk-25\bin
+    - Build tool: C:\Users\sayya\.maven\maven-3.9.14\bin\mvn
+    - Result: ✅ Compilation SUCCESS
+    - Notes: Initial compile failed due Lombok processing; resolved by pinning Lombok and annotation processor path
+  - **Deferred Work**: None
   - **Commit**: Pending
 
 ---
