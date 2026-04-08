@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useData } from '../../context/DataContext';
 import StatusBadge from '../../components/StatusBadge';
 import { formatDate, getDaysUntilExpiry } from '../../utils/certUtils';
@@ -9,8 +9,27 @@ const AllCertificationsPage = () => {
     const { getAllCerts } = useData();
     const [search, setSearch] = useState('');
     const [filter, setFilter] = useState('all');
+    const [allCerts, setAllCerts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const allCerts = getAllCerts();
+    useEffect(() => {
+        const fetchCerts = async () => {
+            try {
+                const certs = await getAllCerts();
+                setAllCerts(certs || []);
+            } catch (err) {
+                console.error('Failed to fetch certs:', err);
+                setAllCerts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCerts();
+    }, [getAllCerts]);
+
+    if (loading) {
+        return <div className="page-title">⏳ Loading...</div>;
+    }
 
     const filtered = allCerts.filter(c => {
         const matchSearch = c.certName.toLowerCase().includes(search.toLowerCase()) ||
@@ -22,6 +41,8 @@ const AllCertificationsPage = () => {
             (filter === 'expired' && c.status === 'EXPIRED');
         return matchSearch && matchFilter;
     });
+
+    const getCertId = (cert) => cert?.id || cert?.certId;
 
     return (
         <div className="fade-up">
@@ -73,7 +94,7 @@ const AllCertificationsPage = () => {
                         ) : filtered.map((cert, idx) => {
                             const days = getDaysUntilExpiry(cert.expiryDate);
                             return (
-                                <tr key={cert.certId}>
+                                <tr key={getCertId(cert)}>
                                     <td style={{ color: 'var(--text-muted)', fontWeight: 600 }}>{idx + 1}</td>
                                     <td>
                                         <div style={{ fontWeight: 600, fontSize: 13 }}>{cert.userName}</div>
@@ -89,7 +110,7 @@ const AllCertificationsPage = () => {
                                     </td>
                                     <td><StatusBadge status={cert.status} /></td>
                                     <td>
-                                        <Link to={`/certificate/${cert.certId}`} className="btn-icon">
+                                        <Link to={`/certificate/${getCertId(cert)}`} className="btn-icon">
                                             <RiEyeLine />
                                         </Link>
                                     </td>
